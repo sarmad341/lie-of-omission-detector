@@ -27,7 +27,11 @@ The application is built using a modern, scalable architecture:
 You need to set up three `.env` files across the project.
 
 **Root `.env` (Used by Docker):**
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory. You can copy the provided `.env.example` file and fill in your keys:
+```bash
+cp .env.example .env
+```
+
 ```env
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 GROQ_API_KEY=your_groq_api_key
@@ -80,15 +84,27 @@ npm install
 npm run dev
 ```
 
-### 4. Setting up the Local Fallback (Ollama)
-If you want to use the local fallback to avoid API rate limits:
-1. Download and install [Ollama](https://ollama.com).
-2. Pull the required models:
-   ```bash
-   ollama pull qwen2.5vl
-   ollama pull llama3.1
-   ```
-3. Ensure Ollama is running in the background.
+### 4. Obtaining API Keys
+
+#### Clerk (Authentication)
+1. Go to [Clerk.com](https://clerk.com/) and create a free account.
+2. Create a new application.
+3. On the dashboard, find your **API Keys**.
+4. Copy the `Publishable key` to `VITE_CLERK_PUBLISHABLE_KEY` and the `Secret key` to `CLERK_SECRET_KEY`.
+
+#### Groq (AI Models)
+1. Go to the [Groq Cloud Console](https://console.groq.com/) and sign in.
+2. Navigate to the **API Keys** section from the left sidebar.
+3. Click "Create API Key".
+4. Copy the key and paste it into `GROQ_API_KEY`. (Note: Groq offers a generous free tier, no credit card required).
+
+#### MongoDB Atlas (Database)
+1. Sign up for a free tier database at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2. Create a new cluster (the M0 free tier is perfectly fine).
+3. Under "Database Access", create a new database user with a username and password.
+4. Under "Network Access", allow access from anywhere (`0.0.0.0/0`) or your specific IP.
+5. Go to your cluster, click **Connect**, select "Drivers", and copy the connection string.
+6. Replace `<password>` with your database user's password and paste it into `MONGODB_URI`.
 
 ## Key Features
 - **Smart Evidence Extraction**: Upload a PDF or Image, and the AI automatically extracts relevant fields (Date, Location, Witnesses, etc.) to pre-fill the claim form.
