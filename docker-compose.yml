@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: verity_backend
+    ports:
+      - "8000:8000"
+    environment:
+      # These will be loaded from the backend/.env if not overridden here
+      - PRIMARY_PROVIDER=${PRIMARY_PROVIDER:-groq}
+      - FALLBACK_PROVIDER=${FALLBACK_PROVIDER:-ollama}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      # Make sure to point to docker host for local Ollama if applicable (http://host.docker.internal:11434 on Mac/Win)
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+    env_file:
+      - ./backend/.env
+    volumes:
+      # Mount uploaded cases to persist them locally even if the container restarts
+      - ./backend/uploaded_cases:/app/uploaded_cases
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass the Vite environment variables so they can be baked into the static build
+        - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+    container_name: verity_frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

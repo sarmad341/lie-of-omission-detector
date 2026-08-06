@@ -1,0 +1,17 @@
+openai>=1.30.0
+pydantic-settings>=2.2.0
+python-dotenv>=1.0.1
+requests>=2.31.0
+Pillow>=10.0.0
+
+fastapi
+uvicorn
+python-multipart
+pymongo
+certifi
+PyJWT
+cryptography
+
+reportlab
+pdfplumber
+python-docx
